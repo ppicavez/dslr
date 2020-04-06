@@ -17,11 +17,11 @@ import math
 def count(dataframe):
     count = []
     for _, serie in dataframe.iteritems():
-        counter = 0
+        nb = 0
         for _, value in serie.iteritems():
             if not pd.isna(value):
-                counter += 1
-        count.append(counter)
+                nb = nb +1
+        count.append(nb)
     return count
 
 
@@ -29,26 +29,30 @@ def maximum(dataframe):
     
     maximum = []
     for _, serie in dataframe.iteritems():
-        clean_serie = serie.dropna()
-        maximum.append(max(clean_serie))
+        newSerie = serie.dropna()
+        maxiSerie =newSerie[0]
+        for _,nb in newSerie.iteritems():
+            if nb > maxiSerie:
+                maxiSerie = nb
+        maximum.append(maxiSerie)
     return maximum
 
-def compute_mean(serie):
-    clean_serie = serie.dropna()
-    length = len(clean_serie)
-    acc = 0.0
+def meanSerie(serie):
+    newSerie = serie.dropna()
+    length = len(newSerie)
+    sum = 0.0
     try:
-        for _, value in clean_serie.iteritems():
-            acc += value
+        for _, value in newSerie.iteritems():
+            sum = sum + value
     except TypeError:
         return (float('NaN'))
     finally:
-        return (acc / length)
+        return (sum / length)
 
 
 def mean(dataframe):
     mean = [
-        compute_mean(serie)
+        meanSerie(serie)
     for _, serie in dataframe.iteritems()]
     return mean
 
@@ -84,7 +88,7 @@ def compute_std(serie):
     
     clean_serie = serie.dropna()
     length = len(clean_serie)
-    mean = compute_mean(clean_serie)
+    mean = meanSerie(clean_serie)
     acc = 0.0
     try:
         for _, value in clean_serie.iteritems():
