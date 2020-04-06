@@ -59,51 +59,53 @@ def mean(dataframe):
 def minimum(dataframe):
     minimum = []
     for _, serie in dataframe.iteritems():
-        clean_serie = serie.dropna()
-        minimum.append(min(clean_serie))
+        newSerie = serie.dropna()
+        miniSerie =newSerie[0]
+        for _,nb in newSerie.iteritems():
+            if nb <miniSerie:
+                miniSerie = nb
+        minimum.append(miniSerie)
     return minimum
 
-def compute_quantile(serie, q):
-    clean_serie = serie.dropna()
-    sorted_serie = clean_serie.sort_values(ascending=True)
-    length = len(sorted_serie)
+def serieQuantile(serie, q):
+    newSerie = serie.dropna()
+    sortedSerie = newSerie.sort_values(ascending=True)
+    length = len(sortedSerie)
     observation = q * (length - 1)
     fraction = observation % 1
     if fraction:
-        i = sorted_serie.iloc[math.floor(observation)]
-        j = sorted_serie.iloc[math.ceil(observation)]
+        i = sortedSerie.iloc[math.floor(observation)]
+        j = sortedSerie.iloc[math.ceil(observation)]
         return i + (j - i) * fraction
     return observation
 
 
 def quantile(dataframe, q):
-    
     quantile = [
-        compute_quantile(serie, q)
+        serieQuantile(serie, q)
         for _, serie in dataframe.iteritems()
     ]
     return quantile
 
-def compute_std(serie):
-    
-    clean_serie = serie.dropna()
-    length = len(clean_serie)
-    mean = meanSerie(clean_serie)
-    acc = 0.0
+def serieStd(serie):
+    newSerie = serie.dropna()
+    length = len(newSerie)
+    mean = meanSerie(newSerie)
+    sum = 0.0
     try:
-        for _, value in clean_serie.iteritems():
-            acc += ((value - mean) ** 2)
+        for _, value in newSerie.iteritems():
+            sum = sum + ((value - mean) ** 2)
     except TypeError:
         return (float('NaN'))
     finally:
-        variance = (1 / length) * acc
+        variance = (1 / length) * sum
         return (np.sqrt(variance))
 
 
 def std(dataframe):
     
     std = [
-        compute_std(serie)
+        serieStd(serie)
         for _, serie in dataframe.iteritems()
     ]
     return std
