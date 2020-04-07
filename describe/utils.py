@@ -13,7 +13,7 @@
 import pandas as pd
 import sys
 
-def read_csv(path):
+def readCsv(path):
     parameters = None
     try:
         parameters = pd.read_csv(path)
@@ -25,6 +25,6 @@ def read_csv(path):
         sys.exit(1)
     return parameters
 
-def drop_columns(df=None, columns=[]):
+def dropColumns(df=None, columns=[]):
     df.drop(columns, axis=1, inplace=True)
     return df

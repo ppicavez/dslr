@@ -15,14 +15,14 @@ import argparse
 import sys
 import os
 
-from utils import read_csv, drop_columns  
+from utils import readCsv, dropColumns  
 
 from statistics import count, mean, std, quantile, minimum, maximum  
 
 def describe(fileName):
     
-    datas = read_csv(fileName)
-    datas = drop_columns(datas, ["Index", "Hogwarts House", "First Name",
+    datas = readCsv(fileName)
+    datas = dropColumns(datas, ["Index", "Hogwarts House", "First Name",
                            "Last Name", "Birthday", "Best Hand"])
     result = pd.DataFrame(
         columns=datas.columns,
