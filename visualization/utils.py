@@ -21,10 +21,7 @@ def readCsv(path):
         print(f'File at path: "{path}" not found')
         sys.exit(1)
     except Exception:
-        print(f'An unexpected error occured on readCsv')
+        print(f'An unexpected error occured on readCSV')
         sys.exit(1)
     return parameters
 
-def dropColumns(df=None, columns=[]):
-    df.drop(columns, axis=1, inplace=True)
-    return df

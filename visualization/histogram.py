@@ -9,35 +9,45 @@
 #    Updated: 2020/03/05 14:15:50 by ppicavez         ###   ########lyon.fr    #
 #                                                                              #
 # **************************************************************************** #
-
 import pandas as pd
+import matplotlib.pyplot as plt
 import sys
-from utils import readCsv, dropColumns  
-from statistics import count, mean, std, quantile, minimum, maximum  
+from utils import readCsv
 
-def describe(fileName):
-    
-    datas = readCsv(fileName)
-    datas = dropColumns(datas, ["Index", "Hogwarts House", "First Name",
-                           "Last Name", "Birthday", "Best Hand"])
-    result = pd.DataFrame(
-        columns=datas.columns,
-        index=["Count","Mean","Std","Min","25%","50%","75%","Max"
-        ]
-    )
+courses = [
+	'Arithmancy',
+	'Astronomy',
+	'Herbology',
+	'Defense Against the Dark Arts',
+	'Divination',
+	'Muggle Studies',
+	'Ancient Runes',
+	'History of Magic',
+	'Transfiguration',
+	'Potions',
+	'Care of Magical Creatures',
+	'Charms',
+	'Flying'
+]
 
-    result.iloc[0] = count(datas)
-    result.iloc[1] = mean(datas)
-    result.iloc[2] = std(datas)
-    result.iloc[3] = minimum(datas)
-    result.iloc[4] = quantile(datas, 0.25)
-    result.iloc[5] = quantile(datas, 0.50)
-    result.iloc[6] = quantile(datas, 0.75)
-    result.iloc[7] = maximum(datas)
+houses = ['Ravenclaw', 'Slytherin', 'Gryffindor', 'Hufflepuff']
 
-    print(result)
+def histogram(fileName):
+	
+	try:
+		datas = readCsv(fileName)
+	except FileNotFoundError as e:
+		print(e)
+		exit(1)
+	plt.figure(figsize=(8, 6))
+	groupedBy = datas.groupby('Hogwarts House')
+	for course in courses:
+		groupedBy[course].plot(kind='hist', alpha=0.5)
+		plt.title(course)
+		plt.show()
+
 
 if __name__ == "__main__":
     if len(sys.argv) != 2:
         raise "Usage: {} data_file".format(sys.argv[0])
-    describe(sys.argv[1])
+    histogram(sys.argv[1])
