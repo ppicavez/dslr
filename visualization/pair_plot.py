@@ -34,7 +34,7 @@ courses = [
 houses = ['Ravenclaw', 'Slytherin', 'Gryffindor', 'Hufflepuff']
 
 
-def scatter(fileName):
+def pair(fileName):
 	try:
 		datas = readCsv(fileName)
 	except FileNotFoundError as e:
@@ -44,22 +44,26 @@ def scatter(fileName):
 	groupedBy = datas.groupby('Hogwarts House')
 
 	fig, axes = plt.subplots(13, 13, figsize=(15, 10))
-	fig.subplots_adjust(hspace=0, wspace=0)
-	i = 0
-	for ax, course in zip(axes, courses):
-		ax[i].text(0.5, 0.5, course.replace(' ', '\n'), ha='center', va='center', fontsize=8)
+	fig.subplots_adjust(hspace=0.1, wspace=0.1)
+	for ax in axes:
 		for a in ax:
 			a.set_xticklabels([])
 			a.set_yticklabels([])
 			a.tick_params(axis='both', width=0)
-		i += 1
+
+	for i in range(len(courses)):
+		groupedBy[courses[i]].plot(kind='hist', alpha=0.5, ax=axes[i][i])
+		axes[i][i].set_xlabel(courses[i].replace(' ', '\n'), fontsize=8)
+		axes[i][i].set_ylabel(courses[i].replace(' ', '\n'), fontsize=8)
 
 
 	for i, xi in enumerate(courses):
 		for j, yi in enumerate(courses):
-			if xi == yi :
+			if j < i:
+				axes[i][j].remove()
 				continue
-
+			if xi == yi:
+				continue
 			ravenclowX = groupedBy.get_group('Ravenclaw')[xi]
 			slytherinX = groupedBy.get_group('Slytherin')[xi]
 			gryffindorX = groupedBy.get_group('Gryffindor')[xi]
@@ -75,10 +79,9 @@ def scatter(fileName):
 			axes[i][j].plot(slytherinX, slytherinY, '^', markersize=.5, color='green')
 			axes[i][j].plot(gryffindorX, gryffindorY, 'o', markersize=.5, color='red')
 			axes[i][j].plot(hufflepuffX, hufflepuffY, 's', markersize=.5, color='yellow')
-	
 	plt.show()
 
 if __name__ == "__main__":
     if len(sys.argv) != 2:
         raise "Usage: {} data_file".format(sys.argv[0])
-    scatter(sys.argv[1])
+    pair(sys.argv[1])
