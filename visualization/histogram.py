@@ -40,14 +40,14 @@ def histogram(fileName):
 	except FileNotFoundError as e:
 		print(e)
 		exit(1)
-	plt.figure(figsize=(8, 7))
+	plt.figure(figsize=(8, 6))
 	groupedBy = datas.groupby('Hogwarts House')
 	for course in courses:
 		groupedBy[course].plot(kind='hist', alpha=0.5)
-		plt.title("Histogram of notes frequency by House for " + course + " course")
+		plt.title("Histogram of notes frequency by House  \n for " + course + " course")
 		plt.legend(loc='upper left')
-		print("Histogram of notes frequency by House for " + course + " course")
-		print("Close graphical windows to see next histogram : ")
+		print("Notes frequency by House for " + course )
+		print("Close graphical windows to see next histogram  or press Ctrl + W \n")
 		plt.show()
 
 
